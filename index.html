@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReviX — Revit tools that do the boring part</title>
+<meta name="description" content="ReviX is a free add-in for Autodesk Revit 2024–2027: rooms and finishes, door numbering, sheets, parameters, coordination and AI — one ribbon tab, one click to install.">
+<meta property="og:title" content="ReviX for Revit">
+<meta property="og:description" content="Revit tools that do the boring part. Revit 2024–2027.">
+<meta property="og:image" content="https://scorpion30.github.io/revix-for-revit/revix-logo.png">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050b1a; --bg2:#081229; --card:#0b1733; --card2:#0f1f44;
+  --line:rgba(130,165,255,.14); --line2:rgba(130,165,255,.28);
+  --text:#e8eefa; --muted:#93a3c3; --dim:#5d6c8c;
+  --blue:#2f7bff; --cyan:#3fd0ff; --gold:#ffc21a; --gold2:#ff9f1a;
+  --radius:16px; --max:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.15;letter-spacing:-.01em}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.eyebrow{font:600 12px/1 Inter;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+.eyebrow.gold{color:var(--gold)}
+section{padding:96px 0}
+.section-head{max-width:640px;margin-bottom:48px}
+.section-head h2{font-size:clamp(28px,4vw,40px);margin:14px 0 12px}
+.section-head p{color:var(--muted);font-size:17px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 15px/1 Inter;padding:15px 22px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-gold{background:linear-gradient(180deg,#ffd24d,var(--gold) 55%,var(--gold2));color:#1a1200;box-shadow:0 8px 30px -8px rgba(255,180,20,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-gold:hover{box-shadow:0 12px 40px -8px rgba(255,180,20,.7),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-ghost{border-color:var(--line2);color:var(--text);background:rgba(255,255,255,.03)}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.btn svg{width:18px;height:18px}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .25s,border-color .25s;border-bottom:1px solid transparent}
+nav.solid{background:rgba(5,11,26,.82);backdrop-filter:blur(14px);border-color:var(--line)}
+.nav-in{display:flex;align-items:center;gap:32px;height:72px}
+.brand{display:flex;align-items:center;gap:12px;font:700 20px/1 "Space Grotesk";letter-spacing:.18em}
+.brand img{height:34px;width:auto}
+.brand b{color:var(--gold);font-weight:700}
+.nav-links{display:flex;gap:28px;margin-left:auto;font-size:14px;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:11px 16px;font-size:14px}
+.menu-btn{display:none;margin-left:auto;background:none;border:0;color:var(--text);cursor:pointer}
+
+/* hero */
+.hero{position:relative;min-height:min(100vh,940px);display:flex;align-items:center;padding:120px 0 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url(hero-bg.jpg) center/cover no-repeat}
+.hero-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 45%,rgba(5,11,26,.75),rgba(5,11,26,.15) 100%),linear-gradient(180deg,rgba(5,11,26,.35),rgba(5,11,26,0) 30%,rgba(5,11,26,0) 70%,var(--bg) 98%)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,5.2vw,60px);margin:18px 0 20px}
+.hero h1 .accent{background:linear-gradient(90deg,var(--cyan),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 .gold{color:var(--gold)}
+.hero p.lead{font-size:19px;color:var(--muted);max-width:520px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 18px}
+.dl-meta{font-size:13px;color:var(--dim)}
+.dl-meta b{color:var(--muted);font-weight:500}
+.hero-logo{filter:drop-shadow(0 30px 60px rgba(47,123,255,.35));animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(11,23,51,.6)}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+
+/* new */
+.new{background:var(--bg)}
+.new-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.new-card{position:relative;padding:32px;border-radius:20px;background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line2);overflow:hidden}
+.new-card::before{content:"";position:absolute;inset:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,rgba(255,194,26,.6),transparent 40%,rgba(63,208,255,.5));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.badge{display:inline-block;font:700 11px/1 Inter;letter-spacing:.14em;padding:6px 9px;border-radius:6px;background:var(--gold);color:#1a1200}
+.new-card .top{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.new-card .top img{width:52px;height:52px;object-fit:contain}
+.new-card h3{font-size:24px}
+.new-card p{color:var(--muted);margin-bottom:16px}
+.ticks{list-style:none;display:grid;gap:8px;font-size:15px}
+.ticks li{position:relative;padding-left:26px}
+.ticks li::before{content:"";position:absolute;left:0;top:7px;width:14px;height:8px;border-left:2px solid var(--cyan);border-bottom:2px solid var(--cyan);transform:rotate(-45deg)}
+.apps{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.apps span{font-size:12px;color:var(--text);padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+
+/* tools */
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.tool{display:flex;flex-direction:column;padding:26px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);transition:border-color .2s,transform .2s,background .2s}
+.tool:hover{border-color:var(--line2);transform:translateY(-3px);background:var(--card2)}
+.tool .ico{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:rgba(47,123,255,.1);border:1px solid var(--line);margin-bottom:18px}
+.tool .ico img{width:34px;height:34px;object-fit:contain}
+.tool h3{font-size:19px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tool h3 .badge{font-size:9px;padding:4px 6px}
+.tool p{color:var(--muted);font-size:15px;flex:1}
+.tool .watch{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:14px;font-weight:600;color:var(--cyan)}
+.tool .watch svg{width:16px;height:16px}
+.tool .watch[hidden]{display:none}
+
+/* soon */
+.soon{padding-top:0}
+.soon-box{padding:32px;border-radius:20px;border:1px dashed var(--line2);background:rgba(11,23,51,.4);display:flex;gap:32px;align-items:center;flex-wrap:wrap}
+.soon-box h3{font-size:20px;margin-bottom:6px}
+.soon-box p{color:var(--muted);font-size:15px;max-width:340px}
+.soon-list{display:flex;flex-wrap:wrap;gap:12px;flex:1}
+.soon-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--line);font-size:14px;color:var(--dim)}
+.soon-item img{width:24px;height:24px;object-fit:contain;filter:grayscale(1) opacity(.5)}
+
+/* install */
+.install{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+.step{padding:28px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);position:relative}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:linear-gradient(180deg,var(--blue),#1d55c9);font:700 17px "Space Grotesk";margin-bottom:18px}
+.step h3{font-size:18px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px}
+.note{margin-top:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding:24px;border-radius:var(--radius);background:rgba(255,194,26,.06);border:1px solid rgba(255,194,26,.25)}
+.note h4{font:600 16px "Space Grotesk";color:var(--gold);margin-bottom:6px}
+.note p{color:var(--muted);font-size:15px}
+.mock{width:300px;border-radius:8px;background:#f3f4f6;color:#222;font:12px/1.4 "Segoe UI",sans-serif;box-shadow:0 20px 40px -10px rgba(0,0,0,.6);overflow:hidden}
+.mock .t{background:#fff;padding:7px 10px;border-bottom:1px solid #ddd;font-size:11px;color:#555}
+.mock .b{padding:12px 12px 10px}
+.mock .q{color:#1a56c4;font-size:13px;margin-bottom:10px}
+.mock .row{display:flex;gap:6px;justify-content:flex-end;margin-top:10px}
+.mock .row span{padding:5px 9px;border:1px solid #bbb;border-radius:3px;background:#fff;font-size:11px}
+.mock .row span.hl{border:2px solid var(--gold2);box-shadow:0 0 0 3px rgba(255,159,26,.3)}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+details{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:0 22px}
+summary{list-style:none;cursor:pointer;padding:20px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--cyan);font-size:20px;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);font-size:15px;padding-bottom:20px}
+
+/* final cta */
+.cta{text-align:center;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;left:50%;top:50%;width:900px;height:500px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(47,123,255,.22),transparent)}
+.cta .wrap{position:relative}
+.cta img{height:70px;width:auto;margin:0 auto 26px}
+.cta h2{font-size:clamp(30px,4.5vw,46px);margin-bottom:14px}
+.cta p{color:var(--muted);margin-bottom:30px}
+
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-size:14px}
+.foot{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.social{display:flex;gap:10px}
+.social a{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+.social a:hover{color:var(--text);border-color:var(--line2)}
+.social svg{width:18px;height:18px}
+
+.hero-grid>*,.new-grid>*,.faq-grid>*,.tools-grid>*,.steps>*,.note>*{min-width:0}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:960px){
+  .hero-grid,.new-grid,.faq-grid{grid-template-columns:1fr}
+  .hero-logo{width:100%;max-width:420px;margin:0 auto;order:-1}
+  .tools-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .note{grid-template-columns:1fr}
+  .mock{width:100%;max-width:320px}
+}
+@media (max-width:720px){
+  .nav-links,.nav-cta{display:none}
+  .menu-btn{display:block}
+  nav.open .nav-links{display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;padding:20px 24px;background:rgba(5,11,26,.97);border-bottom:1px solid var(--line);gap:18px}
+  .tools-grid{grid-template-columns:1fr}
+  section{padding:72px 0}
+  .wrap{padding:0 16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="brand"><img src="revix-mark.png" alt=""><span>REVI<b>X</b></span></a>
+    <div class="nav-links">
+      <a href="#new">What's new</a>
+      <a href="#tools">Tools</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#" class="btn btn-gold nav-cta js-download">Download</a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Add-in for Autodesk Revit</span>
+      <h1>Revit tools that do <span class="accent">the boring part</span><span class="gold">.</span></h1>
+      <p class="lead">Rooms and finishes, door numbers, sheets, parameters and clash checks — plus your own AI working inside the model. One ribbon tab. Every change is one Ctrl+Z.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-gold js-download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+          Download for Windows
+        </a>
+        <a href="#tools" class="btn btn-ghost">See the tools</a>
+      </div>
+      <div class="dl-meta"><b>Version <span class="js-version">1.1.0</span></b> · Revit 2024, 2025, 2026, 2027 · about 30 MB</div>
+      <div class="trust">
+        <span class="chip"><i></i>No admin rights needed</span>
+        <span class="chip"><i></i>Installs in under a minute</span>
+        <span class="chip"><i></i>Your model stays on your PC</span>
+      </div>
+    </div>
+    <img class="hero-logo" src="revix-logo.png" alt="ReviX — Design. Coordinate. Analyze. Automate.">
+  </div>
+</header>
+
+<section class="new" id="new">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow gold">New in version 1.1</span>
+      <h2>Talk to your Revit model.</h2>
+      <p>Two new buttons on the ReviX tab bring AI into Revit — with the app you already pay for, or with your own API key.</p>
+    </div>
+    <div class="new-grid">
+      <article class="new-card rv">
+        <div class="top"><img src="icon-aiconnect.png" alt=""><div><span class="badge">NEW</span><h3>AI Connect</h3></div></div>
+        <p>Connect Revit to the AI app you already use, in one click.</p>
+        <ul class="ticks">
+          <li>Then just ask: read the model, find elements, take off quantities, edit parameters</li>
+          <li>Runs on your computer — no API keys, nothing sent to ReviX</li>
+          <li>Every AI change is one Revit undo step</li>
+        </ul>
+        <div class="apps"><span>Claude</span><span>ChatGPT / Codex</span><span>Gemini CLI</span><span>Cursor</span><span>VS Code Copilot</span><span>Windsurf</span></div>
+      </article>
+      <article class="new-card rv">
+        <div class="top"><img src="icon-aichat.png" alt=""><div><span class="badge">NEW</span><h3>AI Chat</h3></div></div>
+        <p>A chat panel docked inside Revit — no other app needed.</p>
+        <ul class="ticks">
+          <li>Chat with Claude, ChatGPT or Gemini next to your views</li>
+          <li>Uses your own API key from Anthropic, OpenAI or Google</li>
+          <li>Works on the open model with the same ReviX tools, one undo step per change</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">The toolbox</span>
+      <h2>Everything on the ReviX tab.</h2>
+      <p>Each tool does one job well and shows you what will change before it touches the model.</p>
+    </div>
+    <div class="tools-grid" id="tools-grid"></div>
+  </div>
+</section>
+
+<section class="soon">
+  <div class="wrap">
+    <div class="soon-box rv">
+      <div>
+        <span class="eyebrow">On the roadmap</span>
+        <h3 style="margin-top:10px">Coming in the next updates</h3>
+        <p>You'll see these greyed out on the ribbon. They switch on automatically when you install a new version.</p>
+      </div>
+      <div class="soon-list" id="soon-list"></div>
+    </div>
+  </div>
+</section>
+
+<section class="install" id="install">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Install</span>
+      <h2>Up and running in three steps.</h2>
+    </div>
+    <div class="steps">
+      <div class="step rv"><h3>Download</h3><p>Get <b>Revix-Setup.exe</b> from this page. Close Revit before you run it.</p></div>
+      <div class="step rv"><h3>Run the installer</h3><p>It finds the Revit versions on your PC and ticks them for you. No admin password needed.</p></div>
+      <div class="step rv"><h3>Open Revit</h3><p>Click <b>Always Load</b> on the first start. The <b>ReviX</b> tab is now on your ribbon.</p></div>
+    </div>
+    <div class="note rv">
+      <div class="mock" aria-hidden="true">
+        <div class="t">Security - Unsigned Add-In</div>
+        <div class="b">
+          <div class="q">The publisher of this add-in could not be verified. What do you want to do?</div>
+          Name: REVIX<br>Publisher: Unknown Publisher
+          <div class="row"><span class="hl">Always Load</span><span>Load Once</span><span>Do Not Load</span></div>
+        </div>
+      </div>
+      <div>
+        <h4>Seeing “publisher could not be verified”?</h4>
+        <p>That is normal for independent add-ins. Revit shows this message for every add-in that isn't signed with a paid certificate. Choose <b>Always Load</b> and Revit won't ask again.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">FAQ</span>
+      <h2>Questions, answered.</h2>
+    </div>
+    <div class="faq-grid">
+      <details class="rv"><summary>Which Revit versions are supported?</summary><p>Revit 2024, 2025, 2026 and 2027 on Windows. One installer covers all of them; install Revit 2027 later and just run the installer again.</p></details>
+      <details class="rv"><summary>Do I need admin rights?</summary><p>No. ReviX installs into your own user folders, so it works on locked-down office PCs without IT.</p></details>
+      <details class="rv"><summary>Is my model sent anywhere?</summary><p>No. ReviX works inside Revit on your computer. With AI Connect, your own AI app talks to Revit locally; with AI Chat, requests go only to the AI provider whose key you entered.</p></details>
+      <details class="rv"><summary>Can I undo what a tool did?</summary><p>Yes. Every tool writes its changes as a single Revit transaction — press Ctrl+Z once to undo it.</p></details>
+      <details class="rv"><summary>How do I update?</summary><p>Download the latest installer from this page and run it over the old one. Your settings are kept.</p></details>
+      <details class="rv"><summary>How do I uninstall?</summary><p>Windows Settings → Apps → Installed apps → Revix → Uninstall.</p></details>
+      <details class="rv"><summary>Found a bug or have an idea?</summary><p>Click <b>Feedback</b> on the ReviX tab inside Revit. It goes straight to the developer, and replies show up right there in Revit.</p></details>
+      <details class="rv"><summary>Why are some buttons grey?</summary><p>Those tools are still being refined. They light up in a future version once they're reliable enough to trust with your project.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap rv">
+    <img src="revix-mark.png" alt="">
+    <h2>Give your next deadline back some hours.</h2>
+    <p>Free to download · Revit 2024–2027 · Windows</p>
+    <a href="#" class="btn btn-gold js-download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+      Download ReviX&nbsp;<span class="js-version">1.1.0</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#" class="brand" style="font-size:16px"><img src="revix-mark.png" alt="" style="height:26px"><span>REVI<b>X</b></span></a>
+    <span>© <span id="yr"></span> ReviX. Autodesk and Revit are trademarks of Autodesk, Inc.</span>
+    <div class="social">
+      <a href="#" aria-label="YouTube" class="js-youtube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg></a>
+      <a href="#" aria-label="LinkedIn" class="js-linkedin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a>
+      <a href="#" aria-label="Facebook" class="js-facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V9c0-.6.4-1 1-1z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Edit here: download link, version, videos and social links ── */
+const SITE = {
+  version: "1.1.0",
+  download: "https://github.com/scorpion30/revix-for-revit/releases/latest/download/Revix-Setup.exe",
+  youtube: "#", linkedin: "#", facebook: "#"
+};
+const TOOLS = [
+  {id:"rooms",    name:"Rooms Manager",        desc:"Export room data to Excel, bring finish specs back in and model wall, floor and ceiling finishes from them.", video:""},
+  {id:"finishes", name:"Sync Finishes",        desc:"Reads finish Type Marks from the model and writes them into room parameters, so schedules match the geometry.", video:""},
+  {id:"doors",    name:"Renumber Doors",       desc:"Numbers every door after the room it opens into, with a live preview and a list of anything it skipped.", video:""},
+  {id:"docs",     name:"Doc Manager",          desc:"Filter hundreds of sheets, bulk-edit their parameters, renumber them and audit for missing data or duplicates.", video:""},
+  {id:"sheets",   name:"Sheet Manager",        desc:"Drag views and schedules onto sheets, create sheets in batches and place one legend on many sheets at once.", video:""},
+  {id:"params",   name:"Parameter Editor",     desc:"Export any category's parameters to Excel, edit there, and see exactly what will change before importing back.", video:""},
+  {id:"coord",    name:"Coordination Manager", desc:"Find MEP penetrations through walls and floors and check model coordination issues in one place.", video:""},
+  {id:"feedback", name:"Feedback",             desc:"Send an idea or a bug straight to the developer and get the reply right inside Revit.", video:""}
+];
+const SOON = [
+  {id:"layout",name:"Layout Generator"},{id:"area",name:"Area Analysis"},
+  {id:"annotate",name:"Auto Annotate"},{id:"roomlimit",name:"Room Limit"},{id:"cad",name:"CAD Insight"}
+];
+/* ─────────────────────────────────────────────────────────────── */
+const play='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+document.getElementById("tools-grid").innerHTML = TOOLS.map(t=>`
+  <article class="tool rv">
+    <div class="ico"><img src="icon-${t.id}.png" alt=""></div>
+    <h3>${t.name}${t.isNew?'<span class="badge">NEW</span>':''}</h3>
+    <p>${t.desc}</p>
+    <a class="watch" href="${t.video||'#'}" target="_blank" rel="noopener" ${t.video?'':'hidden'}>${play}Watch the video</a>
+  </article>`).join("");
+document.getElementById("soon-list").innerHTML = SOON.map(s=>`
+  <div class="soon-item"><img src="icon-${s.id}.png" alt="">${s.name}</div>`).join("");
+document.querySelectorAll(".js-download").forEach(a=>a.href=SITE.download);
+document.querySelectorAll(".js-version").forEach(e=>e.textContent=SITE.version);
+["youtube","linkedin","facebook"].forEach(k=>document.querySelectorAll(".js-"+k).forEach(a=>{a.href=SITE[k];if(SITE[k]!=="#"){a.target="_blank";a.rel="noopener"}}));
+document.getElementById("yr").textContent=new Date().getFullYear();
+const nav=document.getElementById("nav");
+const onScroll=()=>nav.classList.toggle("solid",scrollY>30); onScroll(); addEventListener("scroll",onScroll,{passive:true});
+document.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".rv").forEach(el=>location.search.includes("shot")?el.classList.add("in"):io.observe(el));
+</script>
+</body>
+</html>
