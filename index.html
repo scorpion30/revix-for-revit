@@ -103,6 +103,37 @@ nav.solid{background:rgba(5,11,26,.82);backdrop-filter:blur(14px);border-color:v
 .tool .watch svg{width:16px;height:16px}
 .tool .watch[hidden]{display:none}
 
+/* demo showcase */
+.demo{padding-top:40px}
+.demo-grid{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+.demo-list{display:flex;flex-direction:column;gap:6px}
+.demo-item{position:relative;display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 14px;border-radius:12px;border:1px solid transparent;background:none;color:var(--muted);font:500 15px/1.3 Inter;cursor:pointer;overflow:hidden;transition:background .2s,border-color .2s,color .2s}
+.demo-item img{width:28px;height:28px;object-fit:contain;flex:none;opacity:.75;transition:opacity .2s}
+.demo-item:hover{background:rgba(255,255,255,.03);color:var(--text)}
+.demo-item .tx{display:flex;flex-direction:column;min-width:0}
+.demo-item small{display:block;max-height:0;opacity:0;font-size:13px;color:var(--muted);transition:max-height .3s,opacity .3s}
+.demo-item.on{background:var(--card);border-color:var(--line2);color:var(--text);font-weight:600}
+.demo-item.on img{opacity:1}
+.demo-item.on small{max-height:20px;opacity:1;font-weight:400;margin-top:3px}
+.demo-item .pg{position:absolute;left:0;bottom:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold))}
+.demo-stage{position:relative;min-width:0}
+.demo-frame{position:relative;border-radius:18px;padding:1px;background:linear-gradient(135deg,rgba(255,194,26,.55),rgba(130,165,255,.18) 35%,rgba(63,208,255,.5));box-shadow:0 40px 90px -30px rgba(47,123,255,.45)}
+.demo-frame video{display:block;width:100%;aspect-ratio:16/9;border-radius:17px;background:#050b1a;object-fit:cover}
+.demo-bar{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+.demo-bar h3{font-size:20px}
+.demo-bar p{color:var(--muted);font-size:15px;flex:1;min-width:220px}
+.demo-ctl{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;flex:none}
+.demo-ctl svg{width:16px;height:16px}
+.demo-full{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--cyan)}
+.demo-full svg{width:16px;height:16px}
+.demo-full[hidden]{display:none}
+.tool .acts{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px}
+.tool .acts a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--cyan)}
+.tool .acts a.pv{color:var(--muted)}
+.tool .acts a.pv:hover{color:var(--text)}
+.tool .acts svg{width:16px;height:16px}
+.tool .acts a[hidden]{display:none}
+
 /* soon */
 .soon{padding-top:0}
 .soon-box{padding:32px;border-radius:20px;border:1px dashed var(--line2);background:rgba(11,23,51,.4);display:flex;gap:32px;align-items:center;flex-wrap:wrap}
@@ -164,6 +195,11 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-siz
   .hero-grid,.new-grid,.faq-grid{grid-template-columns:1fr}
   .hero-logo{width:100%;max-width:420px;margin:0 auto;order:-1}
   .tools-grid{grid-template-columns:1fr 1fr}
+  .demo-grid{grid-template-columns:1fr}
+  .demo-list{flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:6px;scrollbar-width:none;order:2}
+  .demo-list::-webkit-scrollbar{display:none}
+  .demo-item{flex:none;width:auto;padding:9px 12px;border-color:var(--line)}
+  .demo-item.on small{display:none}
   .steps{grid-template-columns:1fr}
   .note{grid-template-columns:1fr}
   .mock{width:100%;max-width:320px}
@@ -185,6 +221,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-siz
   <div class="wrap nav-in">
     <a href="#" class="brand"><img src="revix-mark.png" alt=""><span>REVI<b>X</b></span></a>
     <div class="nav-links">
+      <a href="#demo">See it</a>
       <a href="#new">What's new</a>
       <a href="#tools">Tools</a>
       <a href="#install">Install</a>
@@ -222,6 +259,28 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-siz
   </div>
 </header>
 
+<section class="demo" id="demo">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">See it in action</span>
+      <h2>Each tool in 15 seconds.</h2>
+      <p>Short animations of what every button does. Pick one, or just let them play.</p>
+    </div>
+    <div class="demo-grid rv">
+      <div class="demo-list" id="demo-list" role="tablist" aria-label="Tool previews"></div>
+      <div class="demo-stage">
+        <div class="demo-frame"><video id="demo-video" muted playsinline preload="metadata" aria-label="Tool preview animation"></video></div>
+        <div class="demo-bar">
+          <button class="demo-ctl" id="demo-ctl" aria-label="Pause"></button>
+          <h3 id="demo-name"></h3>
+          <p id="demo-desc"></p>
+          <a class="demo-full" id="demo-full" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Watch the full video</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="new" id="new">
   <div class="wrap">
     <div class="section-head rv">
@@ -239,6 +298,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-siz
           <li>Every AI change is one Revit undo step</li>
         </ul>
         <div class="apps"><span>Claude</span><span>ChatGPT / Codex</span><span>Gemini CLI</span><span>Cursor</span><span>VS Code Copilot</span><span>Windsurf</span></div>
+        <a class="demo-full" href="#demo" data-demo="aiconnect" style="margin-top:20px"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Watch the 15-sec preview</a>
       </article>
       <article class="new-card rv">
         <div class="top"><img src="icon-aichat.png" alt=""><div><span class="badge">NEW</span><h3>AI Chat</h3></div></div>
@@ -248,6 +308,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-siz
           <li>Uses your own API key from Anthropic, OpenAI or Google</li>
           <li>Works on the open model with the same ReviX tools, one undo step per change</li>
         </ul>
+        <a class="demo-full" href="#demo" data-demo="aichat" style="margin-top:20px"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Watch the 15-sec preview</a>
       </article>
     </div>
   </div>
@@ -355,15 +416,19 @@ const SITE = {
   download: "https://github.com/scorpion30/revix-for-revit/releases/latest/download/Revix-Setup.exe",
   youtube: "#", linkedin: "#", facebook: "#"
 };
+/* video: full YouTube video link · from: date it may show (YYYY-MM-DD), leave "" to show as soon as video is set.
+   The 15-second preview plays from vid-<id>.mp4 / poster-<id>.jpg in this folder. */
 const TOOLS = [
-  {id:"rooms",    name:"Rooms Manager",        desc:"Export room data to Excel, bring finish specs back in and model wall, floor and ceiling finishes from them.", video:""},
-  {id:"finishes", name:"Sync Finishes",        desc:"Reads finish Type Marks from the model and writes them into room parameters, so schedules match the geometry.", video:""},
-  {id:"doors",    name:"Renumber Doors",       desc:"Numbers every door after the room it opens into, with a live preview and a list of anything it skipped.", video:""},
-  {id:"docs",     name:"Doc Manager",          desc:"Filter hundreds of sheets, bulk-edit their parameters, renumber them and audit for missing data or duplicates.", video:""},
-  {id:"sheets",   name:"Sheet Manager",        desc:"Drag views and schedules onto sheets, create sheets in batches and place one legend on many sheets at once.", video:""},
-  {id:"params",   name:"Parameter Editor",     desc:"Export any category's parameters to Excel, edit there, and see exactly what will change before importing back.", video:""},
-  {id:"coord",    name:"Coordination Manager", desc:"Find MEP penetrations through walls and floors and check model coordination issues in one place.", video:""},
-  {id:"feedback", name:"Feedback",             desc:"Send an idea or a bug straight to the developer and get the reply right inside Revit.", video:""}
+  {id:"rooms",    name:"Rooms Manager",        tag:"From Excel to finished rooms",      desc:"Export room data to Excel, bring finish specs back in and model wall, floor and ceiling finishes from them.", video:"", from:""},
+  {id:"finishes", name:"Sync Finishes",        tag:"Schedules that match the model",    desc:"Reads finish Type Marks from the model and writes them into room parameters, so schedules match the geometry.", video:"", from:""},
+  {id:"doors",    name:"Renumber Doors",       tag:"Every door, numbered by its room",  desc:"Numbers every door after the room it opens into, with a live preview and a list of anything it skipped.", video:"", from:""},
+  {id:"docs",     name:"Doc Manager",          tag:"Hundreds of sheets, under control", desc:"Filter hundreds of sheets, bulk-edit their parameters, renumber them and audit for missing data or duplicates.", video:"", from:""},
+  {id:"sheets",   name:"Sheet Manager",        tag:"Sheets set up in seconds",          desc:"Drag views and schedules onto sheets, create sheets in batches and place one legend on many sheets at once.", video:"", from:""},
+  {id:"params",   name:"Parameter Editor",     tag:"Edit parameters in Excel, safely",  desc:"Export any category's parameters to Excel, edit there, and see exactly what will change before importing back.", video:"", from:""},
+  {id:"coord",    name:"Coordination Manager", tag:"Every penetration, found for you",  desc:"Find MEP penetrations through walls and floors and check model coordination issues in one place.", video:"", from:""},
+  {id:"aiconnect",name:"AI Connect",           tag:"Your AI app, working in Revit",     desc:"Connect Revit to the AI app you already use, then just ask. Every AI change is one undo step.", video:"", from:"", inGrid:false},
+  {id:"aichat",   name:"AI Chat",              tag:"Chat with your model in Revit",     desc:"A chat panel docked inside Revit: ask about the open model and fix things in one go.", video:"", from:"", inGrid:false},
+  {id:"feedback", name:"Feedback",             tag:"Talk to the developer",             desc:"Send an idea or a bug straight to the developer and get the reply right inside Revit.", video:"", from:""}
 ];
 const SOON = [
   {id:"layout",name:"Layout Generator"},{id:"area",name:"Area Analysis"},
@@ -371,13 +436,50 @@ const SOON = [
 ];
 /* ─────────────────────────────────────────────────────────────── */
 const play='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-document.getElementById("tools-grid").innerHTML = TOOLS.map(t=>`
+const pauseI='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+const eye='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const today=new Date().toISOString().slice(0,10);
+const fullLink=t=>t.video&&(!t.from||today>=t.from)?t.video:"";
+document.getElementById("tools-grid").innerHTML = TOOLS.filter(t=>t.inGrid!==false).map(t=>`
   <article class="tool rv">
     <div class="ico"><img src="icon-${t.id}.png" alt=""></div>
     <h3>${t.name}${t.isNew?'<span class="badge">NEW</span>':''}</h3>
     <p>${t.desc}</p>
-    <a class="watch" href="${t.video||'#'}" target="_blank" rel="noopener" ${t.video?'':'hidden'}>${play}Watch the video</a>
+    <div class="acts">
+      <a class="pv" href="#demo" data-demo="${t.id}">${eye}15-sec preview</a>
+      <a href="${fullLink(t)||'#'}" target="_blank" rel="noopener" ${fullLink(t)?'':'hidden'}>${play}Watch the video</a>
+    </div>
   </article>`).join("");
+
+/* demo showcase: one muted looping preview at a time, auto-advances */
+(()=>{
+  const list=document.getElementById("demo-list"), vid=document.getElementById("demo-video"), ctl=document.getElementById("demo-ctl");
+  const nm=document.getElementById("demo-name"), ds=document.getElementById("demo-desc"), full=document.getElementById("demo-full");
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let cur=0, inView=false, paused=reduce;
+  list.innerHTML=TOOLS.map((t,i)=>`<button class="demo-item" role="tab" data-i="${i}"><img src="icon-${t.id}.png" alt=""><span class="tx">${t.name}<small>${t.tag}</small></span><i class="pg"></i></button>`).join("");
+  const items=[...list.children];
+  const setCtl=()=>{ctl.innerHTML=paused?play:pauseI;ctl.setAttribute("aria-label",paused?"Play":"Pause")};
+  const tryPlay=()=>{if(!paused&&inView)vid.play().catch(()=>{paused=true;setCtl()})};
+  function show(i,user){
+    cur=(i+TOOLS.length)%TOOLS.length; const t=TOOLS[cur];
+    items.forEach((b,k)=>{b.classList.toggle("on",k===cur);b.setAttribute("aria-selected",k===cur);b.querySelector(".pg").style.width="0"});
+    vid.poster=`poster-${t.id}.jpg`; vid.src=`vid-${t.id}.mp4`;
+    nm.textContent=t.name; ds.textContent=t.tag;
+    const fl=fullLink(t); full.hidden=!fl; if(fl)full.href=fl;
+    if(user){paused=false; items[cur].scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"})}
+    setCtl(); tryPlay();
+    const nx=new Image(); nx.src=`poster-${TOOLS[(cur+1)%TOOLS.length].id}.jpg`;
+  }
+  vid.addEventListener("timeupdate",()=>{if(vid.duration)items[cur].querySelector(".pg").style.width=(100*vid.currentTime/vid.duration)+"%"});
+  vid.addEventListener("ended",()=>show(cur+1));
+  list.addEventListener("click",e=>{const b=e.target.closest(".demo-item");if(b)show(+b.dataset.i,true)});
+  ctl.addEventListener("click",()=>{paused=!paused;setCtl();paused?vid.pause():(inView=true,tryPlay())});
+  vid.addEventListener("click",()=>ctl.click());
+  new IntersectionObserver(es=>{inView=es[0].isIntersecting;inView?tryPlay():vid.pause()},{threshold:.35}).observe(vid);
+  document.querySelectorAll("[data-demo]").forEach(a=>a.addEventListener("click",()=>show(TOOLS.findIndex(t=>t.id===a.dataset.demo),true)));
+  show(0);
+})();
 document.getElementById("soon-list").innerHTML = SOON.map(s=>`
   <div class="soon-item"><img src="icon-${s.id}.png" alt="">${s.name}</div>`).join("");
 document.querySelectorAll(".js-download").forEach(a=>a.href=SITE.download);
